@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" sizes="any">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/sanitize.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='jquery-linedtextarea.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='switch.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='modal.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="{{ url_for('static', filename='jquery-linedtextarea.js') }}"></script>
+    <script src="{{ url_for('static', filename='mdeditor.js') }}"></script>
+    <title>Simple Markdown Editor</title>
+</head>
+<body>
+    <header>
+        <div id="header-container">
+            <h1>Simple Markdown Editor</h1>
+            <ul id="main-menu">
+                <li>
+                    <label>更新(Ctrl + Enter)</label>
+                    <button type="submit" form="mainform" name="cmd" value="display" id="reflesh">
+                        <div class="refresh icon"></div>
+                    </button>
+                </li>
+                <li>
+                    <label>HTMLソース表示</label>
+                    <div class="switch-area">
+                        <input type="checkbox" form="mainform" name="switch" id="switch" {% if switch == 'on' %}checked{% endif %}>
+                        <label for="switch"><span></span></label>
+                        <div id="swImg"></div>
+                    </div>
+                </li>
+                <li>
+                    <label>ファイル保存</label>
+                    <div class="download icon" id="download"></div>
+                </li>
+                <li>
+                    <label>ヘルプ</label>
+                    <div id="help">？</div>
+                </li>
+            </ul>
+        </div>
+        <ul id="pulldown-menu">
+            <li><button type="submit" form="mainform" name="cmd" value="md">MDファイル保存</button></li>
+            <li><button type="submit" form="mainform" name="cmd" value="html">HTMLファイル保存</button></li>
+            <!-- <li><button type="submit" form="mainform" name="cmd" value="pdf">PDFファイル保存</button></li> -->
+        </ul>
+    </header>
+    <main>
+        <form id="mainform" action="{{ url_for('input', mode='writing') }}" method="post">
+            <textarea name="md-area" id="md-area">{{ text }}</textarea>
+        </form>
+        {% if switch == 'on' %}
+            <div id="display-area"><pre>{{ html }}</pre></div>
+        {% else %}
+            <div id="display-area">{{ html | safe }}</div>
+        {% endif %}
+    </main>
+    <div class="modal-container">
+        <div class="modal-body">
+            <article class="modal-content">
+                <section>
+                    <h2>ABOUT</h2>
+                    <p class="text-center">『Simple Markdown Editor』 はブラウザ上で手軽に使える簡易的なマークダウンエディタです。</p>
+                    <p class="text-center"><img src="{{ url_for('static', filename='screen.png') }}" alt="操作画面スクリーンショット"></p>
+                    <div class="list-container">
+                        <ol>
+                            <li><strong>入力エリア</strong> （マークダウン記法で入力してください。）</li>
+                            <li><strong>表示エリア</strong> （入力内容がHTMLに変換されて表示されます。）</li>
+                            <li><strong>更新ボタン</strong> （クリックすると入力内容が反映されます。）</li>
+                            <li><strong>表示モード切替スイッチ</strong> （ONにするとHTMLのソースコードが表示されます。）</li>
+                            <li><strong>保存ボタン</strong> （クリックするとプルダウンメニューが出ます。保存形式を選択してください。）</li>
+                        </ol>
+                    </div>
+                </section>
+                <section>
+                    <h2>NOTICE</h2>
+                    <div class="list-container">
+                        <ul>
+                            <li>更新ボタン以外に、キーボードの［Ctrl］+［Enter］でも更新できます。</li>
+                            <li>一部の記法には対応していません。（打ち消し線、チェックボックス等）</li>
+                            <li>一部のHTMLタグは使用できません。（&lt;script&gt;、&lt;style&gt;等)</li>
+                            <li>ブラウザを閉じると入力内容は失われます。</li>
+                        </ul>
+                    </div>
+                </section>
+            </article>
+        </div>
+    </div>
+</body>
+</html>
