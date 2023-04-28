@@ -85,4 +85,4 @@ _Simple Markdown Editor_ is a web app where you can easily edit markdown texts o
         >set FLASK_APP=flask_app  
         >flask run
         
-5. Access the displayed URL using a web browser.
+5. Access to the displayed URL using a web browser.
